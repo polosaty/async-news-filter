@@ -1,6 +1,32 @@
 # Фильтр желтушных новостей
 
-[TODO. Опишите проект, схему работы]
+Проект представляет собой http-api принимающее на вход список (до 10)
+url-ов статей и анализирует их на основе заранее загруженных словарей "заряженных слов".
+Словари загружаются при старте api из директории `charged_dict`.
+
+Пример запроса/ответа:
+```shell
+curl 'http://127.0.0.1:8080/?urls=https://inosmi.ru/politic/20210607/249874429.html,https://example.com'
+```
+
+```json
+[
+  {
+    "url": "https://example.com",
+    "status": "PARSING_ERROR",
+    "score": null,
+    "words_count": null
+  },
+  {
+    "url": "https://inosmi.ru/politic/20210607/249874429.html",
+    "status": "OK",
+    "score": 2.19,
+    "words_count": 639
+  }
+]
+
+
+```
 
 Пока поддерживается только один новостной сайт - [ИНОСМИ.РУ](https://inosmi.ru/). Для него разработан специальный адаптер, умеющий выделять текст статьи на фоне остальной HTML разметки. Для других новостных сайтов потребуются новые адаптеры, все они будут находиться в каталоге `adapters`. Туда же помещен код для сайта ИНОСМИ.РУ: `adapters/inosmi_ru.py`.
 
@@ -8,30 +34,26 @@
 
 # Как установить
 
-Вам понадобится Python версии 3.7 или старше. Для установки пакетов рекомендуется создать виртуальное окружение.
+Вам понадобится docker и docker-compose.
 
-Первым шагом установите пакеты:
 
-```python3
-pip install -r requirements.txt
+```bash
+docker-compose build app
 ```
 
 # Как запустить
 
-```python3
-python main.py
+```bash
+docker-compose up
 ```
 
 # Как запустить тесты
 
 Для тестирования используется [pytest](https://docs.pytest.org/en/latest/), тестами покрыты фрагменты кода сложные в отладке: text_tools.py и адаптеры. Команды для запуска тестов:
 
-```
-python -m pytest adapters/inosmi_ru.py
-```
-
-```
-python -m pytest text_tools.py
+```bash
+docker-compose run --rm app python -m pytest \
+text_tools.py adapters/inosmi_ru.py main.py
 ```
 
 # Цели проекта
