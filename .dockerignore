@@ -1,0 +1,6 @@
+.editorconfig
+docker
+README.md
+.pytest_cache
+__pycache__/
+.idea
