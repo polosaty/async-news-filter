@@ -61,7 +61,7 @@ text_tools.py adapters/inosmi_ru.py process_article.py
 Код написан в учебных целях. Это урок из курса по веб-разработке — [Девман](https://dvmn.org).
 
 
-# Если вам вдруг взбредет деплоить это в swarm
+# Если вам вдруг придется деплоить это в swarm
 
 Подготовлен файл `docker-compose_v3.yml`. Я его, конечно же, не тестировал.
 
@@ -77,3 +77,8 @@ If you have further questions, refer to the discussion on the GitHub issue docke
 ```
 - [пруф1](https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu-and-other-resources)
 - [пруф2](https://github.com/docker/compose/issues/4513)
+
+Еще [там же](https://github.com/docker/compose/issues/4513#issuecomment-377311337) была высказана интересная мысль:
+```
+v2 is not technically older (v2.3 was introduced around the same time as v3.4)
+```
