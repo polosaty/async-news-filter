@@ -53,9 +53,27 @@ docker-compose up
 
 ```bash
 docker-compose run --rm app python -m pytest \
-text_tools.py adapters/inosmi_ru.py main.py
+text_tools.py adapters/inosmi_ru.py process_article.py
 ```
 
 # Цели проекта
 
 Код написан в учебных целях. Это урок из курса по веб-разработке — [Девман](https://dvmn.org).
+
+
+# Если вам вдруг взбредет деплоить это в swarm
+
+Подготовлен файл `docker-compose_v3.yml`. Я его, конечно же, не тестировал.
+
+В файле `docker-compose.yml` используется версия '2.4', потому-что я стремлюсь прописывать лимиты по ресурсам, а разработчики docker-compose говорят:
+
+```
+Looking for options to set resources on non swarm mode containers?
+
+The options described here are specific to the deploy key and swarm mode.
+If you want to set resource constraints on non swarm deployments, use Compose
+file format version 2 CPU, memory, and other resource options.
+If you have further questions, refer to the discussion on the GitHub issue docker/compose/4513.
+```
+- [пруф1](https://docs.docker.com/compose/compose-file/compose-file-v2/#cpu-and-other-resources)
+- [пруф2](https://github.com/docker/compose/issues/4513)

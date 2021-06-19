@@ -1,12 +1,13 @@
 import logging
 import os
+from functools import partial
 
 import aiohttp
 import anyio
 import pymorphy2
 from aiohttp import web
 
-from main import process_article
+from process_article import process_article
 from text_tools import split_by_words
 
 
@@ -14,6 +15,8 @@ MAX_URLS = 10
 
 
 async def handle(request: web.Request):
+    if not 'urls' in request.query:
+        return web.json_response({"error": "too few urls in request, should be 1 or more"}, status=400)
 
     urls = request.query.get('urls', '').split(',')
     if len(urls) > MAX_URLS:
@@ -29,14 +32,14 @@ async def handle(request: web.Request):
     async with aiohttp.ClientSession() as session:
         async with anyio.create_task_group() as tg:
             for url in urls:
-                title = url
-                tg.start_soon(process_article, session, morph, charged_words, url, title, process_results)
+                tg.start_soon(partial(process_article, session, morph, charged_words, url, process_results))
 
     request_results = [
-        dict(url=result.get('title'),
-             status=result['status'].value if result.get('status') else None,
-             score=result.get('score'),
-             words_count=result.get('words_count'), )
+        dict(url=result['url'],
+             status=result['status'].value,
+             score=result['score'],
+             words_count=result['words_count'],
+             title=result['title'])
         for result in process_results
     ]
     return web.json_response(request_results)
@@ -51,7 +54,7 @@ async def make_app():
     charged_words = set()
     for dict_file in os.listdir('charged_dict'):
         with open(os.path.join('charged_dict', dict_file)) as f:
-            charged_words.update(set(await split_by_words(morph, f.read())))
+            charged_words.update(await split_by_words(morph, f.read()))
 
     app['charged_words'] = charged_words
     return app

@@ -35,6 +35,16 @@ def sanitize(html, plaintext=False):
     return text.strip()
 
 
+def get_title(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    titles = soup.select('.article-header__title')
+    if len(titles) != 1:
+        return None
+
+    title = titles[0]
+    return title.get_text()
+
+
 def test_sanitize():
     resp = requests.get('https://inosmi.ru/economic/20190629/245384784.html')
     resp.raise_for_status()

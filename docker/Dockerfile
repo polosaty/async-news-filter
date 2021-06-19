@@ -3,7 +3,7 @@ FROM python:3.9-alpine3.13
 ARG UID=1000
 
 
-ADD ../requirements.txt /tmp/requirements.txt
+ADD ./requirements.txt /tmp/requirements.txt
 WORKDIR /app
 
 RUN apk add --virtual .build-deps --no-cache --update \
